@@ -30,9 +30,7 @@ class GreetingCardController extends BaseController {
     )
 
     const browser = await puppeteer.launch({
-      headless: true,
-      args: ['--disable-gpu', '--no-sandbox'],
-      executablePath: 'google-chrome'
+      headless: true
     })
     const page = await browser.newPage()
     await page.setContent(replacedHtmlText, { waitUntil: 'domcontentloaded' })
