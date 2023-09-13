@@ -9,6 +9,8 @@ steps:
       - 'MAILER_EMAIL=${_MAILER_EMAIL}'
       - 'SENDGRID_API_KEY=${_SENDGRID_API_KEY}'
   - name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'reinstall-puppeteer']
+  - name: 'gcr.io/cloud-builders/npm'
     args: ['run', 'build']
   - name: "gcr.io/cloud-builders/gcloud"
     args: ['app', 'deploy']
