@@ -1,0 +1,4 @@
+migrations/
+tests/
+build/
+dist/

@@ -1,0 +1,44 @@
+{
+  "name": "endeavour-greeting-card-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./build/server",
+    "dev": "nodemon --exec babel-node -- src/server",
+    "build": "rm -rf ./build && babel src -d ./build --copy-files",
+    "lint": "eslint './src/**/*.js' --quiet",
+    "create-env": "printenv > .env",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ryan Wire",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.12.9",
+    "@babel/node": "^7.12.6",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.12.7",
+    "@babel/register": "^7.12.1",
+    "eslint": "^7.15.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "nodemon": "^2.0.6"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.12.5",
+    "@sendgrid/mail": "^7.4.0",
+    "axios": "^1.5.0",
+    "body-parser": "^1.19.0",
+    "celebrate": "^13.0.4",
+    "core-js": "^3.8.1",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jspdf": "^2.5.1",
+    "morgan": "^1.10.0",
+    "puppeteer": "^19.4.1"
+  }
+}
