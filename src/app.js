@@ -4,6 +4,7 @@ import cors from 'cors'
 import logger from 'morgan'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
+import path from 'path'
 import joiErrors from './middlewares/joiErrors'
 
 import * as statusCodes from './constants/statusCodes'
@@ -38,6 +39,19 @@ app.get('/', (req, res) => res.status(200).send({
   message: 'Welcome to the beginning of insanity',
   api_docs: 'Add postman link here'
 }))
+
+app.get('/styles', (req, res) => {
+  const options = {
+    root: path.join(__dirname, 'public', 'styles'),
+    dotfiles: 'deny',
+    headers: {
+      'x-timestamp': Date.now(),
+      'x-sent': true
+    }
+  }
+  const fileName = 'index.css'
+  res.status(statusCodes.OK).sendFile(fileName, options)
+})
 
 // Return 404 for nonexistent routes
 app.use((req, res) => res.status(statusCodes.NOT_FOUND).send({
