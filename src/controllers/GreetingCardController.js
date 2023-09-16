@@ -7,6 +7,7 @@ import GreetingCardService from '../services/GreetingCardService'
 import * as statusCodes from '../constants/statusCodes'
 
 sgMail.setApiKey(String(process.env.SENDGRID_API_KEY))
+const styleSheetUrl = 'https://endeavor-b285f.ew.r.appspot.com/styles/index.css'
 
 const greetingCardService = new GreetingCardService('GreetingCard')
 
@@ -34,13 +35,16 @@ class GreetingCardController extends BaseController {
       args: ['--no-sandbox']
     })
     const page = await browser.newPage()
-    await page.setContent(replacedHtmlText, { waitUntil: 'domcontentloaded' })
+    const styleSheet = `<link href=${styleSheetUrl} rel='stylesheet' crossorigin='anonymous'>`
+    await page.setContent(styleSheet)
+    await page.setContent(`<div class="ql-editor">${replacedHtmlText}</div>` + styleSheet, { waitUntil: 'domcontentloaded' })
+    await page.waitForFunction('document.fonts.ready')
     await page.emulateMediaType('screen')
 
     const pdfBufferBack = await page.pdf({
       format: 'A4',
       landscape: backOrientation === 'landscape',
-      scale: 1.29,
+      scale: 1,
       printBackground: true
     })
 
