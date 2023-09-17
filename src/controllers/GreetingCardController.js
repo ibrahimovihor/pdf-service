@@ -24,7 +24,7 @@ class GreetingCardController extends BaseController {
 
     const compressPdf = true
 
-    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' })
+    const imageResponseFront = await axios.get(imageUrl, { responseType: 'arraybuffer' })
 
     const replacedHtmlText = htmlText.replace(/\[(\w+)\]/g, (placeholder) =>
       placeholders[placeholder.substring(1, placeholder.length - 1)]
@@ -50,16 +50,15 @@ class GreetingCardController extends BaseController {
 
     await browser.close()
 
-    const doc = new Jspdf(frontOrientation, 'px', 'a4', compressPdf)
+    const pdfFront = new Jspdf(frontOrientation, 'px', 'a4', compressPdf)
 
-    const width = doc.internal.pageSize.getWidth()
-    const height = doc.internal.pageSize.getHeight()
+    const width = pdfFront.internal.pageSize.getWidth()
+    const height = pdfFront.internal.pageSize.getHeight()
 
     // Add the image to the PDF
-    doc.addImage(response.data, 'JPEG', 0, 0, width, height, undefined, undefined)
+    pdfFront.addImage(imageResponseFront.data, 'JPEG', 0, 0, width, height, undefined, undefined, 0)
 
-    const pdfBufferFront = Buffer.from(doc.output('arraybuffer'))
-    // Save the PDF as a file
+    const pdfBufferFront = Buffer.from(pdfFront.output('arraybuffer'))
 
     const pdfBase64Front = pdfBufferFront.toString('base64')
     const pdfBase64Back = pdfBufferBack.toString('base64')
