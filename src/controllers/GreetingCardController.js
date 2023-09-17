@@ -2,6 +2,7 @@ import Jspdf from 'jspdf'
 import puppeteer from 'puppeteer'
 import axios from 'axios'
 import sgMail from '@sendgrid/mail'
+import sharp from 'sharp'
 import BaseController from './BaseController'
 import GreetingCardService from '../services/GreetingCardService'
 import * as statusCodes from '../constants/statusCodes'
@@ -25,6 +26,12 @@ class GreetingCardController extends BaseController {
     const compressPdf = true
 
     const imageResponseFront = await axios.get(imageUrl, { responseType: 'arraybuffer' })
+
+    const metadata = await sharp(imageResponseFront.data).metadata()
+    console.log(metadata)
+    const compressedImageBuffer = await sharp(imageResponseFront.data)
+      .jpeg({ quality: 80 }) // Adjust the quality (0-100) as needed
+      .toBuffer()
 
     const replacedHtmlText = htmlText.replace(/\[(\w+)\]/g, (placeholder) =>
       placeholders[placeholder.substring(1, placeholder.length - 1)]
@@ -56,7 +63,7 @@ class GreetingCardController extends BaseController {
     const height = pdfFront.internal.pageSize.getHeight()
 
     // Add the image to the PDF
-    pdfFront.addImage(imageResponseFront.data, 'JPEG', 0, 0, width, height, undefined, undefined, 0)
+    pdfFront.addImage(compressedImageBuffer, 'JPEG', 0, 0, width, height, undefined, undefined, 0)
 
     const pdfBufferFront = Buffer.from(pdfFront.output('arraybuffer'))
 
