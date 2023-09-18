@@ -27,9 +27,8 @@ class GreetingCardController extends BaseController {
 
     const imageResponseFront = await axios.get(imageUrl, { responseType: 'arraybuffer' })
 
-    const metadata = await sharp(imageResponseFront.data).metadata()
-    console.log(metadata)
     const compressedImageBuffer = await sharp(imageResponseFront.data)
+      .rotate()
       .jpeg({ quality: 80 }) // Adjust the quality (0-100) as needed
       .toBuffer()
 
