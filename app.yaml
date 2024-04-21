@@ -6,4 +6,4 @@ automatic_scaling:
 env_variables:
   NODE_ENV: "production"
 vpc_access_connector:
-  name: projects/endeavor-b285f/locations/europe-west/connectors/endeavour-vpc-connector
+  name: projects/endeavor-b285f/locations/europe-west3/connectors/endeavour-vpc-connector
