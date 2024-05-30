@@ -52,12 +52,14 @@ class GreetingCardController extends BaseController {
     svgNode.setAttribute('width', '200px')
     svgNode.setAttribute('height', '20px')
 
+    const barcodeHeight = 16
+
     JsBarcode(svgNode, barcodeValue, {
       xmlDocument: document,
       format: 'EAN13',
       displayValue: false,
       margin: 0,
-      height: 20
+      height: barcodeHeight
     })
 
     const svgText = xmlSerializer.serializeToString(svgNode)
