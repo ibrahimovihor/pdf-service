@@ -26,7 +26,9 @@ const validateGreetingCardPrint = Joi.object({
       subject: Joi.string().required(),
       text: Joi.string().required()
     }).required(),
-    exportSides: Joi.string().valid(...['front', 'back', 'both'])
+    exportSides: Joi.string().valid(...['front', 'back', 'both']),
+    frontFilename: Joi.string().max(128),
+    backFilename: Joi.string().max(128)
   }).required()
 })
 

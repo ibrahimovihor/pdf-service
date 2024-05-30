@@ -18,7 +18,9 @@ class GreetingCardController extends BaseController {
       body: {
         print: {
           htmlText, imageUrl, placeholders, frontOrientation = 'portrait', backOrientation = 'portrait',
-          email: { to, from, subject, text }, exportSides = 'both'
+          email: { to, from, subject, text }, exportSides = 'both',
+          frontFilename = 'greeting-card-front',
+          backFilename = 'greeting-card-back'
         }
       }
     } = req
@@ -70,13 +72,13 @@ class GreetingCardController extends BaseController {
     const pdfBase64Back = pdfBufferBack.toString('base64')
 
     const frontSide = {
-      filename: 'front.pdf',
+      filename: `${frontFilename}.pdf`,
       content: pdfBase64Front, // Read the PDF file
       type: 'application/pdf',
       disposition: 'attachment' // Set the disposition as an attachment
     }
     const backSide = {
-      filename: 'back.pdf',
+      filename: `${backFilename}.pdf`,
       content: pdfBase64Back, // Read the PDF file
       type: 'application/pdf',
       disposition: 'attachment' // Set the disposition as an attachment
