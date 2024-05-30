@@ -3,6 +3,8 @@ import puppeteer from 'puppeteer'
 import axios from 'axios'
 import sgMail from '@sendgrid/mail'
 import sharp from 'sharp'
+import JsBarcode from 'jsbarcode'
+import { DOMImplementation, XMLSerializer } from 'xmldom'
 import BaseController from './BaseController'
 import GreetingCardService from '../services/GreetingCardService'
 import * as statusCodes from '../constants/statusCodes'
@@ -20,7 +22,8 @@ class GreetingCardController extends BaseController {
           htmlText, imageUrl, placeholders, frontOrientation = 'portrait', backOrientation = 'portrait',
           email: { to, from, subject, text }, exportSides = 'both',
           frontFilename = 'greeting-card-front',
-          backFilename = 'greeting-card-back'
+          backFilename = 'greeting-card-back',
+          barcodeValue = '1234567890128'
         }
       }
     } = req
@@ -42,10 +45,34 @@ class GreetingCardController extends BaseController {
       headless: 'new',
       args: ['--no-sandbox']
     })
+
+    const xmlSerializer = new XMLSerializer()
+    const document = new DOMImplementation().createDocument('http://www.w3.org/1999/xhtml', 'html', null)
+    const svgNode = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    svgNode.setAttribute('width', '200px')
+    svgNode.setAttribute('height', '20px')
+
+    JsBarcode(svgNode, barcodeValue, {
+      xmlDocument: document,
+      format: 'EAN13',
+      displayValue: false,
+      margin: 0,
+      height: 20
+    })
+
+    const svgText = xmlSerializer.serializeToString(svgNode)
+    console.log(svgText)
+
     const page = await browser.newPage()
     const styleSheet = `<link href=${styleSheetUrl} rel='stylesheet' crossorigin='anonymous'>`
+    const htmlContent = `
+      ${styleSheet}
+      <div class="ql-editor">${replacedHtmlText}</div>
+      <div style="position: absolute; bottom: 16px; left: 16px;">${svgText}</div>
+    `
+
     await page.setContent(styleSheet)
-    await page.setContent(`<div class="ql-editor">${replacedHtmlText}</div>` + styleSheet, { waitUntil: 'domcontentloaded' })
+    await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' })
     await page.waitForFunction('document.fonts.ready')
     await page.emulateMediaType('screen')
 

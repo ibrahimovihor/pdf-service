@@ -28,7 +28,8 @@ const validateGreetingCardPrint = Joi.object({
     }).required(),
     exportSides: Joi.string().valid(...['front', 'back', 'both']),
     frontFilename: Joi.string().max(128),
-    backFilename: Joi.string().max(128)
+    backFilename: Joi.string().max(128),
+    barcodeValue: Joi.string().regex(/^\d{8}(\d{4}|\d{5}|\d{6})?$/)
   }).required()
 })
 
