@@ -63,7 +63,6 @@ class GreetingCardController extends BaseController {
     })
 
     const svgText = xmlSerializer.serializeToString(svgNode)
-    console.log(svgText)
 
     const page = await browser.newPage()
     const styleSheet = `<link href=${styleSheetUrl} rel='stylesheet' crossorigin='anonymous'>`
