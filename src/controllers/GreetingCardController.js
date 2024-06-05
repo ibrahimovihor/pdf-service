@@ -23,7 +23,8 @@ class GreetingCardController extends BaseController {
           email: { to, from, subject, text }, exportSides = 'both',
           frontFilename = 'greeting-card-front',
           backFilename = 'greeting-card-back',
-          barcodeValue = '1234567890128'
+          barcodeValue,
+          barcodeFormat
         }
       }
     } = req
@@ -41,6 +42,18 @@ class GreetingCardController extends BaseController {
       placeholders[placeholder.substring(1, placeholder.length - 1)]
     )
 
+    const determineBarcodeType = (barcode) => {
+      if (/^\d{8}$/.test(barcode)) {
+        return 'ean8'
+      } else if (/^\d{13}$/.test(barcode)) {
+        return 'ean13'
+      } else if (/^\d{14}$/.test(barcode)) {
+        return 'ean14'
+      } else {
+        return undefined
+      }
+    }
+
     const browser = await puppeteer.launch({
       headless: 'new',
       args: ['--no-sandbox']
@@ -54,23 +67,27 @@ class GreetingCardController extends BaseController {
 
     const barcodeHeight = 16
 
-    JsBarcode(svgNode, barcodeValue, {
-      xmlDocument: document,
-      format: 'EAN13',
-      displayValue: false,
-      margin: 0,
-      height: barcodeHeight
-    })
-
+    if (barcodeValue) {
+      JsBarcode(svgNode, barcodeValue, {
+        xmlDocument: document,
+        format: barcodeFormat || determineBarcodeType(barcodeValue),
+        displayValue: false,
+        margin: 0,
+        height: barcodeHeight
+      })
+    }
     const svgText = xmlSerializer.serializeToString(svgNode)
 
     const page = await browser.newPage()
     const styleSheet = `<link href=${styleSheetUrl} rel='stylesheet' crossorigin='anonymous'>`
-    const htmlContent = `
+    let htmlContent = `
       ${styleSheet}
       <div class="ql-editor">${replacedHtmlText}</div>
-      <div style="position: absolute; bottom: 16px; left: 16px;">${svgText}</div>
     `
+
+    if (barcodeValue) {
+      htmlContent += `<div style="position: absolute; bottom: 16px; left: 16px;">${svgText}</div>`
+    }
 
     await page.setContent(styleSheet)
     await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' })
@@ -123,6 +140,7 @@ class GreetingCardController extends BaseController {
       from,
       subject,
       text,
+      html: text,
       attachments: attachments[exportSides]
     }
     await sgMail.send(msg)
