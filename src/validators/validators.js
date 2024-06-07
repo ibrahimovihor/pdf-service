@@ -29,8 +29,21 @@ const validateGreetingCardPrint = Joi.object({
     exportSides: Joi.string().valid(...['front', 'back', 'both']),
     frontFilename: Joi.string().max(128),
     backFilename: Joi.string().max(128),
-    barcodeValue: Joi.string().regex(/^\d{8}(\d{4}|\d{5}|\d{6})?$/).allow(null),
-    barcodeFormat: Joi.string().valid(...['ean14' | 'ean13' | 'ean8' | 'upc']).allow(null).optional()
+    barcodeValue: Joi.string().when('barcodeFormat', {
+      switch: [
+        { is: 'ean8', then: Joi.string().length(8).required() },
+        { is: 'ean13', then: Joi.string().length(13).required() },
+        { is: 'itf14', then: Joi.string().length(14).required() },
+        {
+          is: 'upc',
+          then: Joi.string().regex(/^\d{8}(\d{4})?$/).messages({
+            'string.pattern.base': '{#label} length must be 8 or 12 characters long'
+          }).required()
+        }
+      ],
+      otherwise: Joi.string().allow(null)
+    }),
+    barcodeFormat: Joi.string().valid(...['itf14', 'ean13', 'ean8', 'upc']).allow(null).optional()
   }).required()
 })
 

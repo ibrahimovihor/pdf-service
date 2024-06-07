@@ -42,18 +42,6 @@ class GreetingCardController extends BaseController {
       placeholders[placeholder.substring(1, placeholder.length - 1)]
     )
 
-    const determineBarcodeType = (barcode) => {
-      if (/^\d{8}$/.test(barcode)) {
-        return 'ean8'
-      } else if (/^\d{13}$/.test(barcode)) {
-        return 'ean13'
-      } else if (/^\d{14}$/.test(barcode)) {
-        return 'ean14'
-      } else {
-        return undefined
-      }
-    }
-
     const browser = await puppeteer.launch({
       headless: 'new',
       args: ['--no-sandbox']
@@ -68,13 +56,17 @@ class GreetingCardController extends BaseController {
     const barcodeHeight = 16
 
     if (barcodeValue) {
-      JsBarcode(svgNode, barcodeValue, {
-        xmlDocument: document,
-        format: barcodeFormat || determineBarcodeType(barcodeValue),
-        displayValue: false,
-        margin: 0,
-        height: barcodeHeight
-      })
+      try {
+        JsBarcode(svgNode, barcodeValue, {
+          xmlDocument: document,
+          format: barcodeFormat || undefined,
+          displayValue: false,
+          margin: 0,
+          height: barcodeHeight
+        })
+      } catch (error) {
+        console.log(error)
+      }
     }
     const svgText = xmlSerializer.serializeToString(svgNode)
 
