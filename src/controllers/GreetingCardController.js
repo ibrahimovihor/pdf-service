@@ -62,7 +62,8 @@ class GreetingCardController extends BaseController {
           format: barcodeFormat || undefined,
           displayValue: false,
           margin: 0,
-          height: barcodeHeight
+          height: barcodeHeight,
+          flat: true
         })
       } catch (error) {
         console.log(error)
