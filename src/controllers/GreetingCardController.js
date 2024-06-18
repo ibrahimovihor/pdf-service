@@ -20,7 +20,7 @@ class GreetingCardController extends BaseController {
       body: {
         print: {
           htmlText, imageUrl, placeholders, frontOrientation = 'portrait', backOrientation = 'portrait',
-          email: { to, from, subject, text }, exportSides = 'both',
+          email: { to, from, subject, text, cc, bcc }, exportSides = 'both',
           frontFilename = 'greeting-card-front',
           backFilename = 'greeting-card-back',
           barcodeValue,
@@ -131,6 +131,8 @@ class GreetingCardController extends BaseController {
     const msg = {
       to,
       from,
+      cc,
+      bcc,
       subject,
       text,
       html: text,

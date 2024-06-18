@@ -21,8 +21,19 @@ const validateGreetingCardPrint = Joi.object({
     frontOrientation: Joi.string().valid(...['portrait', 'landscape']),
     backOrientation: Joi.string().valid(...['portrait', 'landscape']),
     email: Joi.object({
-      to: Joi.string().email().required(),
-      from: Joi.string().email().required(),
+      to: Joi.alternatives().try(
+        Joi.string().email().required(),
+        Joi.array().items(Joi.string().email())
+      ),
+      from: Joi.alternatives().try(
+        Joi.string().email().required(),
+        Joi.object({
+          email: Joi.string().email().required(),
+          name: Joi.string().required()
+        }).required()
+      ),
+      cc: Joi.array().items(Joi.string().email()),
+      bcc: Joi.array().items(Joi.string().email()),
       subject: Joi.string().required(),
       text: Joi.string().required()
     }).required(),
