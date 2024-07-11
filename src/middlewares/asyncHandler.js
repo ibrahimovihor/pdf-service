@@ -26,7 +26,8 @@ const asyncHandler = (cb) => async (req, res, next) => {
       statusCode: err.code || statusCodes.SERVER_ERROR,
       success: false,
       errors: {
-        message: err.message
+        message: err.message,
+        body: err?.response?.body?.errors
       }
     })
   }
