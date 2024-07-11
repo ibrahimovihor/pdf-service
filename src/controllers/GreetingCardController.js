@@ -128,11 +128,25 @@ class GreetingCardController extends BaseController {
       both: [frontSide, backSide]
     }
 
+    const ensureArray = (input) => {
+      if (Array.isArray(input)) {
+        return input
+      }
+      return [input]
+    }
+
+    const uniqueEmails = (mainList, ...otherLists) => {
+      const mainSet = new Set(mainList)
+      return otherLists.map(list => list.filter(email => !mainSet.has(email)))
+    }
+
+    const [filteredCc, filteredBcc] = uniqueEmails(ensureArray(to), cc, bcc)
+
     const msg = {
       to,
       from,
-      cc,
-      bcc,
+      cc: filteredCc,
+      bcc: filteredBcc,
       subject,
       text,
       html: text,
