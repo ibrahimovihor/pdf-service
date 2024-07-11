@@ -4,7 +4,7 @@ const asyncHandler = (cb) => async (req, res, next) => {
   try {
     return await cb(req, res, next)
   } catch (err) {
-    console.dir(err)
+    console.dir(JSON.stringify(err))
     if (err.name === 'SequelizeUniqueConstraintError') {
       return res.status(statusCodes.BAD_REQUEST).json({
         statusCode: statusCodes.BAD_REQUEST,
