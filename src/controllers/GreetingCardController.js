@@ -75,7 +75,7 @@ class GreetingCardController extends BaseController {
     const styleSheet = `<link href=${styleSheetUrl} rel='stylesheet' crossorigin='anonymous'>`
     let htmlContent = `
       ${styleSheet}
-      <div class="ql-editor">${replacedHtmlText}</div>
+      <div class="ql-container"><div class="ql-editor">${replacedHtmlText}</div></div>
     `
 
     if (barcodeValue) {
