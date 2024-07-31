@@ -38,8 +38,8 @@ const validateGreetingCardPrint = Joi.object({
       text: Joi.string().required()
     }).required(),
     exportSides: Joi.string().valid(...['front', 'back', 'both']),
-    frontFilename: Joi.string().max(128),
-    backFilename: Joi.string().max(128),
+    frontFilename: Joi.string().max(256),
+    backFilename: Joi.string().max(256),
     barcodeValue: Joi.string().when('barcodeFormat', {
       switch: [
         { is: 'ean8', then: Joi.string().length(8).required() },
