@@ -106,6 +106,20 @@ class GreetingCardController extends BaseController {
 
     const pdfBufferFront = Buffer.from(pdfFront.output('arraybuffer'))
 
+    const pdfSizeFront = pdfBufferFront.length
+    const pdfSizeBack = pdfBufferBack.length
+
+    if ((exportSides === 'front' && (pdfSizeFront < 1024)) ||
+        (exportSides === 'back' && (pdfSizeBack < 1024)) ||
+        (exportSides === 'both' && (pdfSizeFront < 1024 || pdfSizeBack < 1024))) {
+      return res.status(statusCodes.BAD_REQUEST).send({
+        statusCode: statusCodes.BAD_REQUEST,
+        success: false,
+        greetingCard: {
+          message: 'PDF size is too small to be sent by email'
+        }
+      })
+    }
     const pdfBase64Front = pdfBufferFront.toString('base64')
     const pdfBase64Back = pdfBufferBack.toString('base64')
 
