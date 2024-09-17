@@ -176,6 +176,130 @@ class GreetingCardController extends BaseController {
       }
     })
   }
+
+  async downloadCard (req, res) {
+    const {
+      body: {
+        download: {
+          htmlText, imageUrl, placeholders, frontOrientation = 'portrait', backOrientation = 'portrait',
+          exportSides = 'both',
+          frontFilename = 'greeting-card-front',
+          backFilename = 'greeting-card-back',
+          barcodeValue,
+          barcodeFormat
+        }
+      }
+    } = req
+
+    const compressPdf = true
+
+    const imageResponseFront = await axios.get(imageUrl, { responseType: 'arraybuffer' })
+
+    const compressedImageBuffer = await sharp(imageResponseFront.data)
+      .rotate()
+      .jpeg({ quality: 80 }) // Adjust the quality (0-100) as needed
+      .toBuffer()
+
+    const replacedHtmlText = htmlText.replace(/\[(\w+)\]/g, (placeholder) =>
+      placeholders[placeholder.substring(1, placeholder.length - 1)]
+    )
+
+    const browser = await puppeteer.launch({
+      headless: 'new',
+      args: ['--no-sandbox']
+    })
+
+    const xmlSerializer = new XMLSerializer()
+    const document = new DOMImplementation().createDocument('http://www.w3.org/1999/xhtml', 'html', null)
+    const svgNode = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+    svgNode.setAttribute('width', '200px')
+    svgNode.setAttribute('height', '20px')
+
+    const barcodeHeight = 16
+
+    if (barcodeValue) {
+      try {
+        JsBarcode(svgNode, barcodeValue, {
+          xmlDocument: document,
+          format: barcodeFormat || undefined,
+          displayValue: false,
+          margin: 0,
+          height: barcodeHeight,
+          flat: true
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    const svgText = xmlSerializer.serializeToString(svgNode)
+
+    const page = await browser.newPage()
+    const styleSheet = `<link href=${styleSheetUrl} rel='stylesheet' crossorigin='anonymous'>`
+    let htmlContent = `
+      ${styleSheet}
+      <div class="ql-container"><div class="ql-editor">${replacedHtmlText}</div></div>
+    `
+
+    if (barcodeValue) {
+      htmlContent += `<div style="position: absolute; bottom: 16px; left: 16px;">${svgText}</div>`
+    }
+
+    await page.setContent(styleSheet)
+    await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' })
+    await page.waitForFunction('document.fonts.ready')
+    await page.emulateMediaType('screen')
+
+    const pdfBufferBack = await page.pdf({
+      format: 'A4',
+      landscape: backOrientation === 'landscape',
+      scale: 1,
+      printBackground: true
+    })
+
+    await browser.close()
+
+    const pdfFront = new Jspdf(frontOrientation, 'px', 'a4', compressPdf)
+
+    const width = pdfFront.internal.pageSize.getWidth()
+    const height = pdfFront.internal.pageSize.getHeight()
+
+    // Add the image to the PDF
+    pdfFront.addImage(compressedImageBuffer, 'JPEG', 0, 0, width, height, undefined, undefined, 0)
+
+    const pdfBufferFront = Buffer.from(pdfFront.output('arraybuffer'))
+
+    const pdfSizeFront = pdfBufferFront.length
+    const pdfSizeBack = pdfBufferBack.length
+
+    if ((exportSides === 'front' && (pdfSizeFront < 1024)) ||
+        (exportSides === 'back' && (pdfSizeBack < 1024))) {
+      return res.status(statusCodes.BAD_REQUEST).send({
+        statusCode: statusCodes.BAD_REQUEST,
+        success: false,
+        greetingCard: {
+          message: 'PDF size is too small to be downloaded'
+        }
+      })
+    }
+
+    const pdfBuffers = {
+      front: pdfBufferFront,
+      back: pdfBufferBack
+    }
+    const filenames = {
+      front: frontFilename,
+      back: backFilename
+    }
+
+    const pdfBuffer = pdfBuffers[exportSides]
+    const filename = filenames[exportSides]
+
+    res.setHeader('Content-Type', 'application/pdf')
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}.pdf"`)
+    res.setHeader('Content-Length', pdfBuffer.length)
+
+    return res.send(pdfBuffer)
+  }
 }
 
 export default new GreetingCardController(greetingCardService)
