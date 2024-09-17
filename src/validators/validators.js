@@ -70,9 +70,9 @@ const validateGreetingCardDownload = Joi.object({
       then: Joi.required()
     }),
     placeholders: Joi.object({
-      salutation: Joi.string().allow('').allow(null),
-      firstname: Joi.string().allow('').allow(null),
-      lastname: Joi.string().allow('').allow(null)
+      salutation: Joi.string().allow('').required(),
+      firstname: Joi.string().allow('').required(),
+      lastname: Joi.string().allow('').required()
     }),
     frontOrientation: Joi.string().valid(...['portrait', 'landscape']),
     backOrientation: Joi.string().valid(...['portrait', 'landscape']),
