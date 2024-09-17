@@ -13,6 +13,11 @@ const greetingCardRoutes = () => {
       [Segments.BODY]: validator.validateGreetingCardPrint
     }), asyncHandler(GreetingCardController.printCard))
     .all(methodNotAllowed)
+  greetingCardRouter.route('/greeting-cards/download')
+    .post(celebrate({
+      [Segments.BODY]: validator.validateGreetingCardDownload
+    }), asyncHandler(GreetingCardController.downloadCard))
+    .all(methodNotAllowed)
   return greetingCardRouter
 }
 

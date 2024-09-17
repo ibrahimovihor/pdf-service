@@ -59,7 +59,41 @@ const validateGreetingCardPrint = Joi.object({
   }).required()
 })
 
+const validateGreetingCardDownload = Joi.object({
+  download: Joi.object({
+    htmlText: Joi.string().allow('').allow(null),
+    imageUrl: Joi.string().uri(),
+    placeholders: Joi.object({
+      salutation: Joi.string().allow('').allow(null),
+      firstname: Joi.string().allow('').allow(null),
+      lastname: Joi.string().allow('').allow(null)
+    }),
+    frontOrientation: Joi.string().valid(...['portrait', 'landscape']),
+    backOrientation: Joi.string().valid(...['portrait', 'landscape']),
+    exportSides: Joi.string().valid(...['front', 'back']),
+    frontFilename: Joi.string().max(256),
+    backFilename: Joi.string().max(256),
+    barcodeValue: Joi.string().when('barcodeFormat', {
+      switch: [
+        { is: 'ean8', then: Joi.string().length(8).required() },
+        { is: 'ean13', then: Joi.string().length(13).required() },
+        { is: 'itf14', then: Joi.string().length(14).required() },
+        { is: 'upc', then: Joi.string().length(12).required() },
+        {
+          is: 'upce',
+          then: Joi.string().regex(/^\d{6}(\d{2})?$/).messages({
+            'string.pattern.base': '{#label} length must be 6 or 8 characters long'
+          }).required()
+        }
+      ],
+      otherwise: Joi.string().allow(null)
+    }),
+    barcodeFormat: Joi.string().valid(...['itf14', 'ean13', 'ean8', 'upc', 'upce']).allow(null).optional()
+  }).required()
+})
+
 export default {
   validateBody,
-  validateGreetingCardPrint
+  validateGreetingCardPrint,
+  validateGreetingCardDownload
 }
