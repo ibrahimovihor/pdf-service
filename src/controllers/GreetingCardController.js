@@ -182,7 +182,7 @@ class GreetingCardController extends BaseController {
       body: {
         download: {
           htmlText, imageUrl, placeholders, frontOrientation = 'portrait', backOrientation = 'portrait',
-          exportSides = 'both',
+          exportSide = 'back',
           frontFilename = 'greeting-card-front',
           backFilename = 'greeting-card-back',
           barcodeValue,
@@ -192,87 +192,98 @@ class GreetingCardController extends BaseController {
     } = req
 
     const compressPdf = true
+    let pdfSizeBack = 0
+    let pdfSizeFront = 0
+    let pdfBuffer
+    let filename
 
-    const imageResponseFront = await axios.get(imageUrl, { responseType: 'arraybuffer' })
+    if (exportSide === 'front') {
+      const imageResponseFront = await axios.get(imageUrl, { responseType: 'arraybuffer' })
 
-    const compressedImageBuffer = await sharp(imageResponseFront.data)
-      .rotate()
-      .jpeg({ quality: 80 }) // Adjust the quality (0-100) as needed
-      .toBuffer()
+      const compressedImageBuffer = await sharp(imageResponseFront.data)
+        .rotate()
+        .jpeg({ quality: 80 }) // Adjust the quality (0-100) as needed
+        .toBuffer()
 
-    const replacedHtmlText = htmlText.replace(/\[(\w+)\]/g, (placeholder) =>
-      placeholders[placeholder.substring(1, placeholder.length - 1)]
-    )
+      const pdfFront = new Jspdf(frontOrientation, 'px', 'a4', compressPdf)
 
-    const browser = await puppeteer.launch({
-      headless: 'new',
-      args: ['--no-sandbox']
-    })
+      const width = pdfFront.internal.pageSize.getWidth()
+      const height = pdfFront.internal.pageSize.getHeight()
 
-    const xmlSerializer = new XMLSerializer()
-    const document = new DOMImplementation().createDocument('http://www.w3.org/1999/xhtml', 'html', null)
-    const svgNode = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-    svgNode.setAttribute('width', '200px')
-    svgNode.setAttribute('height', '20px')
+      // Add the image to the PDF
+      pdfFront.addImage(compressedImageBuffer, 'JPEG', 0, 0, width, height, undefined, undefined, 0)
 
-    const barcodeHeight = 16
+      const pdfBufferFront = Buffer.from(pdfFront.output('arraybuffer'))
 
-    if (barcodeValue) {
-      try {
-        JsBarcode(svgNode, barcodeValue, {
-          xmlDocument: document,
-          format: barcodeFormat || undefined,
-          displayValue: false,
-          margin: 0,
-          height: barcodeHeight,
-          flat: true
-        })
-      } catch (error) {
-        console.log(error)
+      pdfBuffer = pdfBufferFront
+      filename = frontFilename
+      pdfSizeFront = pdfBufferFront.length
+    } else {
+      const replacedHtmlText = htmlText.replace(/\[(\w+)\]/g, (placeholder) =>
+        placeholders[placeholder.substring(1, placeholder.length - 1)]
+      )
+
+      const browser = await puppeteer.launch({
+        headless: 'new',
+        args: ['--no-sandbox']
+      })
+
+      const xmlSerializer = new XMLSerializer()
+      const document = new DOMImplementation().createDocument('http://www.w3.org/1999/xhtml', 'html', null)
+      const svgNode = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
+      svgNode.setAttribute('width', '200px')
+      svgNode.setAttribute('height', '20px')
+
+      const barcodeHeight = 16
+
+      if (barcodeValue) {
+        try {
+          JsBarcode(svgNode, barcodeValue, {
+            xmlDocument: document,
+            format: barcodeFormat || undefined,
+            displayValue: false,
+            margin: 0,
+            height: barcodeHeight,
+            flat: true
+          })
+        } catch (error) {
+          console.log(error)
+        }
       }
+      const svgText = xmlSerializer.serializeToString(svgNode)
+
+      const page = await browser.newPage()
+      const styleSheet = `<link href=${styleSheetUrl} rel='stylesheet' crossorigin='anonymous'>`
+      let htmlContent = `
+            ${styleSheet}
+            <div class="ql-container"><div class="ql-editor">${replacedHtmlText}</div></div>
+          `
+
+      if (barcodeValue) {
+        htmlContent += `<div style="position: absolute; bottom: 16px; left: 16px;">${svgText}</div>`
+      }
+
+      await page.setContent(styleSheet)
+      await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' })
+      await page.waitForFunction('document.fonts.ready')
+      await page.emulateMediaType('screen')
+
+      const pdfBufferBack = await page.pdf({
+        format: 'A4',
+        landscape: backOrientation === 'landscape',
+        scale: 1,
+        printBackground: true
+      })
+
+      await browser.close()
+
+      pdfBuffer = pdfBufferBack
+      filename = backFilename
+      pdfSizeBack = pdfBufferBack.length
     }
-    const svgText = xmlSerializer.serializeToString(svgNode)
 
-    const page = await browser.newPage()
-    const styleSheet = `<link href=${styleSheetUrl} rel='stylesheet' crossorigin='anonymous'>`
-    let htmlContent = `
-      ${styleSheet}
-      <div class="ql-container"><div class="ql-editor">${replacedHtmlText}</div></div>
-    `
-
-    if (barcodeValue) {
-      htmlContent += `<div style="position: absolute; bottom: 16px; left: 16px;">${svgText}</div>`
-    }
-
-    await page.setContent(styleSheet)
-    await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' })
-    await page.waitForFunction('document.fonts.ready')
-    await page.emulateMediaType('screen')
-
-    const pdfBufferBack = await page.pdf({
-      format: 'A4',
-      landscape: backOrientation === 'landscape',
-      scale: 1,
-      printBackground: true
-    })
-
-    await browser.close()
-
-    const pdfFront = new Jspdf(frontOrientation, 'px', 'a4', compressPdf)
-
-    const width = pdfFront.internal.pageSize.getWidth()
-    const height = pdfFront.internal.pageSize.getHeight()
-
-    // Add the image to the PDF
-    pdfFront.addImage(compressedImageBuffer, 'JPEG', 0, 0, width, height, undefined, undefined, 0)
-
-    const pdfBufferFront = Buffer.from(pdfFront.output('arraybuffer'))
-
-    const pdfSizeFront = pdfBufferFront.length
-    const pdfSizeBack = pdfBufferBack.length
-
-    if ((exportSides === 'front' && (pdfSizeFront < 1024)) ||
-        (exportSides === 'back' && (pdfSizeBack < 1024))) {
+    if ((exportSide === 'front' && (pdfSizeFront < 1024)) ||
+        (exportSide === 'back' && (pdfSizeBack < 1024))) {
       return res.status(statusCodes.BAD_REQUEST).send({
         statusCode: statusCodes.BAD_REQUEST,
         success: false,
@@ -281,18 +292,6 @@ class GreetingCardController extends BaseController {
         }
       })
     }
-
-    const pdfBuffers = {
-      front: pdfBufferFront,
-      back: pdfBufferBack
-    }
-    const filenames = {
-      front: frontFilename,
-      back: backFilename
-    }
-
-    const pdfBuffer = pdfBuffers[exportSides]
-    const filename = filenames[exportSides]
 
     res.setHeader('Content-Type', 'application/pdf')
     res.setHeader('Content-Disposition', `attachment; filename="${filename}.pdf"`)

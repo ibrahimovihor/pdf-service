@@ -61,8 +61,14 @@ const validateGreetingCardPrint = Joi.object({
 
 const validateGreetingCardDownload = Joi.object({
   download: Joi.object({
-    htmlText: Joi.string().allow('').allow(null),
-    imageUrl: Joi.string().uri(),
+    htmlText: Joi.string().when('exportSide', {
+      is: 'back',
+      then: Joi.required()
+    }),
+    imageUrl: Joi.string().uri().when('exportSide', {
+      is: 'front',
+      then: Joi.required()
+    }),
     placeholders: Joi.object({
       salutation: Joi.string().allow('').allow(null),
       firstname: Joi.string().allow('').allow(null),
@@ -70,7 +76,7 @@ const validateGreetingCardDownload = Joi.object({
     }),
     frontOrientation: Joi.string().valid(...['portrait', 'landscape']),
     backOrientation: Joi.string().valid(...['portrait', 'landscape']),
-    exportSides: Joi.string().valid(...['front', 'back']),
+    exportSide: Joi.string().valid(...['front', 'back']),
     frontFilename: Joi.string().max(256),
     backFilename: Joi.string().max(256),
     barcodeValue: Joi.string().when('barcodeFormat', {
