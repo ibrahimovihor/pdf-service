@@ -4,6 +4,7 @@ import validator from '../validators/validators'
 import GreetingCardController from '../controllers/GreetingCardController'
 import asyncHandler from '../middlewares/asyncHandler'
 import methodNotAllowed from '../middlewares/methodNotAllowed'
+import checkAuth from '../middlewares/checkAuth'
 
 const greetingCardRoutes = () => {
   const greetingCardRouter = express.Router()
@@ -14,7 +15,7 @@ const greetingCardRoutes = () => {
     }), asyncHandler(GreetingCardController.printCard))
     .all(methodNotAllowed)
   greetingCardRouter.route('/greeting-cards/download')
-    .post(celebrate({
+    .post(asyncHandler(checkAuth), celebrate({
       [Segments.BODY]: validator.validateGreetingCardDownload
     }), asyncHandler(GreetingCardController.downloadCard))
     .all(methodNotAllowed)

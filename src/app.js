@@ -4,13 +4,16 @@ import cors from 'cors'
 import logger from 'morgan'
 import bodyParser from 'body-parser'
 import dotenv from 'dotenv'
+import passport from 'passport'
 import joiErrors from './middlewares/joiErrors'
 
 import * as statusCodes from './constants/statusCodes'
 
 import routers from './routes'
+import passportAuth from './config/passport'
 
 dotenv.config()
+passportAuth(passport)
 
 const apiPrefix = '/api'
 
