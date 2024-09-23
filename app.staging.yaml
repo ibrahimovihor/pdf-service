@@ -1,0 +1,8 @@
+service: staging
+runtime: nodejs18
+instance_class: F4
+automatic_scaling:
+  target_cpu_utilization: 0.95
+  max_instances: 2
+env_variables:
+  NODE_ENV: "staging"

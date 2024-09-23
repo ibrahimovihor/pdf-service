@@ -1,0 +1,16 @@
+steps:
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'create-env']
+    env:
+      - 'NODE_ENV=${_NODE_ENV}'
+      - 'PORT=${_PORT}'
+      - 'MAILER_EMAIL=${_MAILER_EMAIL}'
+      - 'SENDGRID_API_KEY=${_SENDGRID_API_KEY}'
+      - 'SECRET_KEY=${_SECRET_KEY}'
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['run', 'build']
+  - name: "gcr.io/cloud-builders/gcloud"
+    args: ['app', 'deploy', 'app.development.yaml']
+    timeout: '600s'
