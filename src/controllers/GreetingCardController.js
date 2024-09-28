@@ -10,7 +10,6 @@ import GreetingCardService from '../services/GreetingCardService'
 import * as statusCodes from '../constants/statusCodes'
 
 sgMail.setApiKey(String(process.env.SENDGRID_API_KEY))
-const styleSheetUrl = 'https://endeavor-b285f.ew.r.appspot.com/styles/index.css'
 
 const greetingCardService = new GreetingCardService('GreetingCard')
 
@@ -28,6 +27,8 @@ class GreetingCardController extends BaseController {
         }
       }
     } = req
+
+    const styleSheetUrl = `${req.protocol}://${req.get('host')}/styles/index.css`
 
     const compressPdf = true
 
@@ -190,6 +191,8 @@ class GreetingCardController extends BaseController {
         }
       }
     } = req
+
+    const styleSheetUrl = `${req.protocol}://${req.get('host')}/styles/index.css`
 
     const compressPdf = true
     let pdfSizeBack = 0
