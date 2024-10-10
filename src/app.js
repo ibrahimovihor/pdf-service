@@ -33,6 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // Add routes to the app
 app.use(apiPrefix, routers.emailRouter())
 app.use(apiPrefix, routers.greetingCardRouter())
+app.use(apiPrefix, routers.invoiceRouter())
 
 // Add validation middleware
 app.use(joiErrors)
