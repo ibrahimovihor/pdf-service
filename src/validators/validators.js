@@ -101,18 +101,18 @@ const validateGreetingCardDownload = Joi.object({
 const validateInvoiceDownload = Joi.object({
   download: Joi.object({
     shippingAddress: Joi.object({
-      company: Joi.string().required(),
+      company: Joi.string().required().allow(''),
       street: Joi.string().required(),
       city: Joi.string().required(),
-      state: Joi.string().required(),
+      state: Joi.string().required().allow(''),
       zip: Joi.string().required(),
       country: Joi.string().required()
     }).required(),
     billingAddress: Joi.object({
-      company: Joi.string().required(),
+      company: Joi.string().required().allow(''),
       street: Joi.string().required(),
       city: Joi.string().required(),
-      state: Joi.string().required(),
+      state: Joi.string().required().allow(''),
       zip: Joi.string().required(),
       country: Joi.string().required()
     }).required(),
