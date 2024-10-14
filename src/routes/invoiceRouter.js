@@ -14,6 +14,13 @@ const invoiceRoutes = () => {
       [Segments.BODY]: validator.validateInvoiceDownload
     }), asyncHandler(InvoiceController.downloadInvoice))
     .all(methodNotAllowed)
+
+  invoiceRouter.route('/invoices/email')
+    .post(celebrate({
+      [Segments.BODY]: validator.validateInvoiceEmail
+    }), asyncHandler(InvoiceController.sendInvoiceEmail))
+    .all(methodNotAllowed)
+
   return invoiceRouter
 }
 
