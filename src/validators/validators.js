@@ -98,41 +98,51 @@ const validateGreetingCardDownload = Joi.object({
   }).required()
 })
 
+const invoiceDownload = {
+  shippingAddress: Joi.object({
+    company: Joi.string().required().allow(''),
+    street: Joi.string().required(),
+    city: Joi.string().required(),
+    state: Joi.string().required().allow(''),
+    zip: Joi.string().required(),
+    country: Joi.string().required()
+  }).required(),
+  billingAddress: Joi.object({
+    company: Joi.string().required().allow(''),
+    street: Joi.string().required(),
+    city: Joi.string().required(),
+    state: Joi.string().required().allow(''),
+    zip: Joi.string().required(),
+    country: Joi.string().required()
+  }).required(),
+  invoiceNumber: Joi.string().required(),
+  documentDate: Joi.date().required(),
+  dueDate: Joi.date().required(),
+  deliveryDate: Joi.date().required(),
+  orderNumber: Joi.string().required(),
+  costCenter: Joi.string().allow('').allow(null),
+  totalNet: Joi.number().required(),
+  totalAmount: Joi.number().required(),
+  vat: Joi.number().required(),
+  invoiceItems: Joi.array().items(Joi.object({
+    articleName: Joi.string().required(),
+    articleNumber: Joi.string().required(),
+    taxRate: Joi.number().required(),
+    quantity: Joi.number().required(),
+    price: Joi.number().required(),
+    total: Joi.number().required()
+  })).required()
+}
+
 const validateInvoiceDownload = Joi.object({
-  download: Joi.object({
-    shippingAddress: Joi.object({
-      company: Joi.string().required().allow(''),
-      street: Joi.string().required(),
-      city: Joi.string().required(),
-      state: Joi.string().required().allow(''),
-      zip: Joi.string().required(),
-      country: Joi.string().required()
-    }).required(),
-    billingAddress: Joi.object({
-      company: Joi.string().required().allow(''),
-      street: Joi.string().required(),
-      city: Joi.string().required(),
-      state: Joi.string().required().allow(''),
-      zip: Joi.string().required(),
-      country: Joi.string().required()
-    }).required(),
-    invoiceNumber: Joi.string().required(),
-    documentDate: Joi.date().required(),
-    dueDate: Joi.date().required(),
-    deliveryDate: Joi.date().required(),
-    orderNumber: Joi.string().required(),
-    costCenter: Joi.string().allow('').allow(null),
-    totalNet: Joi.number().required(),
-    totalAmount: Joi.number().required(),
-    vat: Joi.number().required(),
-    invoiceItems: Joi.array().items(Joi.object({
-      articleName: Joi.string().required(),
-      articleNumber: Joi.string().required(),
-      taxRate: Joi.number().required(),
-      quantity: Joi.number().required(),
-      price: Joi.number().required(),
-      total: Joi.number().required()
-    })).required()
+  download: invoiceDownload
+})
+
+const validateInvoiceEmail = Joi.object({
+  download: invoiceDownload,
+  email: Joi.object({
+    to: Joi.string().email().required(),
+    from: Joi.string().email().required()
   }).required()
 })
 
@@ -140,5 +150,6 @@ export default {
   validateBody,
   validateGreetingCardPrint,
   validateGreetingCardDownload,
-  validateInvoiceDownload
+  validateInvoiceDownload,
+  validateInvoiceEmail
 }
