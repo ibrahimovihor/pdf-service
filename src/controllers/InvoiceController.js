@@ -70,7 +70,7 @@ function replaceTemplateVariables (download) {
             <td>${item.quantity || 1}</td>
             <td>${item.articleNumber || ''}</td>
             <td>${item.articleName || ''}</td>
-            <td>${(item.taxRate || 19).toFixed(2)}%</td>
+            <td>${(item.taxRate || 19).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</td>
             <td>${(item.price || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
             <td>${(item.total || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
           </tr>
