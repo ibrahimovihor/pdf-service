@@ -46,11 +46,11 @@ function replaceTemplateVariables (download) {
       case '[invoiceNumber]':
         return invoiceNumber || ''
       case '[documentDate]':
-        return dayjs(documentDate).format('MM.DD.YYYY')
+        return dayjs(documentDate).format('DD.MM.YYYY')
       case '[dueDate]':
-        return dayjs(dueDate).format('MM.DD.YYYY')
+        return dayjs(dueDate).format('DD.MM.YYYY')
       case '[deliveryDate]':
-        return dayjs(deliveryDate).format('MM.DD.YYYY')
+        return dayjs(deliveryDate).format('DD.MM.YYYY')
       case '[orderNumber]':
         return orderNumber || ''
       case '[costCenter]':
