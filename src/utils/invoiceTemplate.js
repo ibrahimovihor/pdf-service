@@ -90,7 +90,7 @@ Your big little things team
 <td class=align-right><strong>[totalNet]</strong></td>
 </tr>
 <tr>
-<td><strong>VAT (19.00%):</strong></td>
+<td><strong>VAT (19%):</strong></td>
 <td class=align-right><strong>[vat]</strong></td>
 </tr>
 <tr>
