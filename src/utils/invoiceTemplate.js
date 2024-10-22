@@ -1,5 +1,5 @@
 export const invoiceTemplate = `
-<style>body{font-family:Arial,sans-serif;margin:0;background-color:#fff}p{margin-top:8px;margin-bottom:8px}.px-1{padding-left:4px;padding-right:4px}.mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}.invoice-container{width:210mm;height:297mm;margin:auto;background:#fff;display:flex;flex-direction:column}.content{flex-grow:1}.invoice-container .content{padding: 80px;}.invoice-container .footer{padding: 20px 80px 80px;}.header{margin-bottom:20px}.header .logo{width:25%}.header img{width:100%}.header h2{margin:0}.header .company-info{font-size:14px}.flex-row{display:flex;justify-content:flex-start}.flex-col{display:flex;flex-direction:column}.justify-between{justify-content:space-between}.justify-end{justify-content:flex-end}.align-items-end{align-items:flex-end}.addresses{width:100%}.address-box{width:48%}.invoice-box{width:48%}.invoice-details{margin-top:20px;width:100%;border-collapse:collapse}.invoice-details td,.invoice-details th{border:1px solid #ddd;padding:8px;text-align:left}.totals{margin-top:20px}.footer{margin-top:50px;font-size:12px;color:#777}.footer a{text-decoration:none;color:#777}.align-right{text-align:right;}</style>
+<style>body{font-family:Arial,sans-serif;margin:0;background-color:#fff}p{margin-top:8px;margin-bottom:8px}.px-1{padding-left:4px;padding-right:4px}.mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}.invoice-container{width:210mm;height:297mm;margin:auto;background:#fff;display:flex;flex-direction:column}.content{flex-grow:1}.invoice-container .content{padding: 80px;}.invoice-container .footer{padding: 20px 80px 80px;}.header{margin-bottom:20px}.header .logo{width:25%}.header img{width:100%}.header h2{margin:0}.header .company-info{font-size:14px}.flex-row{display:flex;justify-content:flex-start}.flex-col{display:flex;flex-direction:column}.justify-between{justify-content:space-between}.justify-end{justify-content:flex-end}.align-items-end{align-items:flex-end}.addresses{width:100%}.address-box{width:48%}.invoice-box{width:48%}.invoice-details{margin-top:20px;width:100%;border-collapse:collapse}.invoice-details td,.invoice-details th{border:1px solid #ddd;padding:8px;text-align:left}.totals{margin-top:20px}.footer{margin-top:50px;font-size:12px;color:#777}.footer a{text-decoration:none;color:#777}.align-right{text-align:right;}.table-header-primary{background-color:#f8e4dc}</style>
 <div class=invoice-container>
 <div class=content>
 <div class=header>
@@ -69,7 +69,7 @@ Your big little things team
 </div>
 <table class=invoice-details>
 <thead>
-<tr>
+<tr class=table-header-primary>
 <th>Pos.</th>
 <th>Amount</th>
 <th>Art. Nr.</th>
