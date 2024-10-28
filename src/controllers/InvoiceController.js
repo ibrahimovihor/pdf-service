@@ -118,7 +118,7 @@ class InvoiceController extends BaseController {
 
     const pdfBuffer = await generatePDF(replacedHtmlText)
 
-    const filename = `big-little-things-invoice-${download.invoiceNumber}`
+    const filename = `SalesInvoice-${download.invoiceNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
 
     res.setHeader('Content-Type', 'application/pdf')
     res.setHeader('Content-Disposition', `attachment; filename="${filename}.pdf"`)
@@ -148,7 +148,7 @@ class InvoiceController extends BaseController {
       attachments: [
         {
           content: pdfBuffer.toString('base64'),
-          filename: `big-little-things-invoice-${download.invoiceNumber}.pdf`,
+          filename: `SalesInvoice-${download.invoiceNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH.pdf`,
           type: 'application/pdf',
           disposition: 'attachment'
         }
