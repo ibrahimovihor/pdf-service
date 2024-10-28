@@ -115,7 +115,7 @@ const invoiceDownload = {
     zip: Joi.string().required(),
     country: Joi.string().required()
   }).required(),
-  invoiceNumber: Joi.string().required(),
+  invoiceNumber: Joi.number().required(),
   documentDate: Joi.date().required(),
   dueDate: Joi.date().required(),
   deliveryDate: Joi.date().required(),
