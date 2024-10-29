@@ -90,6 +90,10 @@ Your big little things team
 <td class=align-right><strong>[totalNet]</strong></td>
 </tr>
 <tr>
+<td><strong>Shipping Fee:</strong></td>
+<td class="align-right"><strong>[totalShipping]</strong></td>
+</tr>
+<tr>
 <td><strong>VAT (19%):</strong></td>
 <td class=align-right><strong>[vat]</strong></td>
 </tr>
