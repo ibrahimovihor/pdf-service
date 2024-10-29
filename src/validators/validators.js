@@ -123,6 +123,7 @@ const invoiceDownload = {
   costCenter: Joi.string().allow('').allow(null),
   totalNet: Joi.number().required(),
   totalAmount: Joi.number().required(),
+  totalShipping: Joi.number().required(),
   vat: Joi.number().required(),
   invoiceItems: Joi.array().items(Joi.object({
     articleName: Joi.string().required(),

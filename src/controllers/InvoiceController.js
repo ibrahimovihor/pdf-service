@@ -23,6 +23,7 @@ function replaceTemplateVariables (download) {
       invoiceItems,
       totalNet,
       totalAmount,
+      totalShipping,
       vat
     } = download
 
@@ -59,6 +60,8 @@ function replaceTemplateVariables (download) {
         return (totalNet || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
       case '[totalAmount]':
         return (totalAmount || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
+      case '[totalShipping]':
+        return (totalShipping || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
       case '[vat]':
         return (vat || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
       case '[invoiceItems]':
