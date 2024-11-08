@@ -23,6 +23,7 @@ function replaceTemplateVariables (download) {
       invoiceItems,
       totalNet,
       totalAmount,
+      totalShipping,
       vat
     } = download
 
@@ -59,6 +60,8 @@ function replaceTemplateVariables (download) {
         return (totalNet || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
       case '[totalAmount]':
         return (totalAmount || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
+      case '[totalShipping]':
+        return (totalShipping || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
       case '[vat]':
         return (vat || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
       case '[invoiceItems]':
@@ -72,7 +75,7 @@ function replaceTemplateVariables (download) {
             <td>${item.articleName || ''}</td>
             <td>${(item.taxRate || 19).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</td>
             <td>${(item.price || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
-            <td>${(item.total || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
+            <td>${(item.total * item.quantity || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
           </tr>
         `).join('')
       default:
