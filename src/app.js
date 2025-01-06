@@ -34,6 +34,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(apiPrefix, routers.emailRouter())
 app.use(apiPrefix, routers.greetingCardRouter())
 app.use(apiPrefix, routers.invoiceRouter())
+app.use(apiPrefix, routers.documentRouter())
 
 // Add validation middleware
 app.use(joiErrors)
