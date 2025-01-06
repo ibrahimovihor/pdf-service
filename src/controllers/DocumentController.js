@@ -167,7 +167,7 @@ class DocumentController extends BaseController {
     const msg = {
       to,
       from,
-      subject: `${type === 'invoice' ? 'Invoice' : type === 'orderConfirmation' ? 'Order Confirmation Document' : 'Packing Slip Document'}  ${download.documentNumber}`,
+      subject: `${type === 'invoice' ? 'Sales Invoice' : type === 'orderConfirmation' ? 'Order Confirmation Document' : 'Packing Slip Document'}  ${download.documentNumber}`,
       text: `Please find attached the ${type === 'invoice' ? 'invoice' : type === 'orderConfirmation' ? 'order confirmation document' : 'packing slip document'} .`,
       attachments: [
         {
