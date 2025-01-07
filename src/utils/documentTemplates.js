@@ -32,7 +32,7 @@ export const invoiceTemplate = `
     margin-top: 16px
   }
 
-  .invoice-container {
+  .document-container {
     width: 210mm;
     height: 297mm;
     margin: auto;
@@ -45,11 +45,11 @@ export const invoiceTemplate = `
     flex-grow: 1
   }
 
-  .invoice-container .content {
+  .document-container .content {
     padding: 80px;
   }
 
-  .invoice-container .footer {
+  .document-container .footer {
     padding: 20px 80px 80px;
   }
 
@@ -103,18 +103,18 @@ export const invoiceTemplate = `
     width: 48%
   }
 
-  .invoice-box {
+  .document-box {
     width: 48%
   }
 
-  .invoice-details {
+  .document-details {
     margin-top: 20px;
     width: 100%;
     border-collapse: collapse
   }
 
-  .invoice-details td,
-  .invoice-details th {
+  .document-details td,
+  .document-details th {
     padding: 8px;
     text-align: left
   }
@@ -190,7 +190,7 @@ export const invoiceTemplate = `
     margin-bottom: 5px;
   }
 </style>
-<div class=invoice-container>
+<div class=document-container>
   <div class=content>
     <div class=header>
       <div class=logo>
@@ -223,7 +223,7 @@ export const invoiceTemplate = `
       </div>
     </div>
     <div class="addresses flex-row mt-4">
-      <div class="invoice-box">
+      <div class="document-box">
         <strong>Invoice</strong><br>
         <p>
         Invoice Number: [documentNumber]<br><br>
@@ -233,7 +233,7 @@ export const invoiceTemplate = `
           Your big little things team
         </p>
       </div>
-      <div class="invoice-box">
+      <div class="document-box">
         <table>
           <tr>
             <td>Document Date:</td>
@@ -258,7 +258,7 @@ export const invoiceTemplate = `
         </table>
       </div>
     </div>
-    <table class="invoice-details">
+    <table class="document-details">
       <thead>
         <tr class="table-header-primary">
           <th>Pos.</th>
@@ -291,7 +291,7 @@ export const invoiceTemplate = `
           <td class="text-left"><strong>Invoice amount</strong></td>
           <td class="text-right"><strong>[totalAmount]</strong></td>
         </tr>
-         <tr>
+        <tr>
           <td></td>
           <td class="text-left"><strong>Payment amount</strong></td>
           <td class="text-right"><strong>[totalAmount]</strong></td>
@@ -363,7 +363,7 @@ export const orderConfirmationTemplate = `
     margin-top: 16px
   }
 
-  .invoice-container {
+  .document-container {
     width: 210mm;
     height: 297mm;
     margin: auto;
@@ -376,11 +376,11 @@ export const orderConfirmationTemplate = `
     flex-grow: 1
   }
 
-  .invoice-container .content {
+  .document-container .content {
     padding: 80px;
   }
 
-  .invoice-container .footer {
+  .document-container .footer {
     padding: 20px 80px 80px;
   }
 
@@ -434,28 +434,26 @@ export const orderConfirmationTemplate = `
     width: 48%
   }
 
-  .invoice-box {
-    width: 48%;
-    line-height: 24px;
-    font-size: 16px;
-  }
-
-  .invoice-table {
+  .document-box {
     width: 48%;
   }
 
-  .invoice-table table {
+  .document-table {
+    width: 48%;
+  }
+
+  .document-table table {
     font-size: 13px;
   }
 
-  .invoice-details {
+  .document-details {
     margin-top: 20px;
     width: 100%;
     border-collapse: collapse
   }
 
-  .invoice-details td,
-  .invoice-details th {
+  .document-details td,
+  .document-details th {
     padding: 8px;
     text-align: left
   }
@@ -491,7 +489,7 @@ export const orderConfirmationTemplate = `
     
   }
 </style>
-<div class="invoice-container">
+<div class="document-container">
   <div class="content">
     <div class="header">
       <div class="logo">
@@ -524,7 +522,7 @@ export const orderConfirmationTemplate = `
       </div>
     </div>
     <div class="addresses flex-row mt-4">
-      <div class="invoice-box">
+      <div class="document-box">
         <strong>Order Confirmation</strong><br>
         <p>
         Order Confirmation Number: [documentNumber]<br><br>
@@ -534,7 +532,7 @@ export const orderConfirmationTemplate = `
           Your big little things team
         </p>
       </div>
-      <div class="invoice-table">
+      <div class="document-table">
         <table>
           <tr>
             <td>Date:</td>
@@ -563,7 +561,7 @@ export const orderConfirmationTemplate = `
         </table>
       </div>
     </div>
-    <table class="invoice-details">
+    <table class="document-details">
       <thead>
         <tr class="table-header-primary">
           <th>Pos.</th>
@@ -660,7 +658,7 @@ export const packingSlipTemplate = `
     margin-top: 16px
   }
 
-  .invoice-container {
+  .document-container {
     width: 210mm;
     height: 297mm;
     margin: auto;
@@ -673,11 +671,11 @@ export const packingSlipTemplate = `
     flex-grow: 1
   }
 
-  .invoice-container .content {
+  .document-container .content {
     padding: 80px;
   }
 
-  .invoice-container .footer {
+  .document-container .footer {
     padding: 20px 80px 80px;
   }
 
@@ -731,31 +729,22 @@ export const packingSlipTemplate = `
     width: 48%
   }
 
-  .invoice-box { 
-    width: 48%;
-    line-height: 24px;
-    font-size: 16px;
-    text-wrap: pretty;
-    max-width: 300px;
-    word-break: break-word;
-  }
-
-  .invoice-table {
+  .document-table {
     width: 48%;
   }
 
-  .invoice-table table {
+  .document-table table {
     font-size: 13px;
   }
 
-  .invoice-details {
+  .document-details {
     margin-top: 20px;
     width: 100%;
     border-collapse: collapse
   }
 
-  .invoice-details td,
-  .invoice-details th {
+  .document-details td,
+  .document-details th {
     padding: 8px;
     text-align: left
   }
@@ -798,7 +787,7 @@ export const packingSlipTemplate = `
     text-wrap: pretty;
   }
 </style>
-<div class="invoice-container">
+<div class="document-container">
   <div class="content">
     <div class="header">
       <div class="logo">
@@ -831,7 +820,7 @@ export const packingSlipTemplate = `
       </div>
     </div>
     <div class="addresses flex-row mt-4">
-      <div class="invoice-box">
+      <div class="document-box">
         <strong>Packing Slip</strong><br>
         Packing Slip Number: [documentNumber]<br><br>
 
@@ -847,7 +836,7 @@ export const packingSlipTemplate = `
           Your big little things team
         </p>
       </div>
-      <div class="invoice-table">
+      <div class="document-table">
         <table>
           <tr>
             <td>Date:</td>
@@ -876,7 +865,7 @@ export const packingSlipTemplate = `
         </table>
       </div>
     </div>
-    <table class="invoice-details">
+    <table class="document-details">
       <thead>
         <tr class="table-header-primary">
           <th>Pos.</th>
