@@ -436,14 +436,12 @@ export const orderConfirmationTemplate = `
 
   .document-box {
     width: 48%;
+    line-height: 24px;
+    font-size: 16px;
   }
 
   .document-table {
     width: 48%;
-  }
-
-  .document-table table {
-    font-size: 13px;
   }
 
   .document-details {
@@ -729,12 +727,17 @@ export const packingSlipTemplate = `
     width: 48%
   }
 
-  .document-table {
+  .document-box { 
     width: 48%;
+    line-height: 24px;
+    font-size: 16px;
+    text-wrap: pretty;
+    max-width: 300px;
+    word-break: break-word;
   }
 
-  .document-table table {
-    font-size: 13px;
+  .document-table {
+    width: 48%;
   }
 
   .document-details {
