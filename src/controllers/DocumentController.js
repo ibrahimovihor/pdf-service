@@ -141,7 +141,7 @@ class DocumentController extends BaseController {
 
     const pdfBuffer = await generatePDF(replacedHtmlText)
 
-    const filename = `${type === 'invoice' ? 'Sales Invoice' : type === 'orderConfirmation' ? 'Order Confirmation Document' : 'Packing Slip Document'}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
+    const filename = `${type === 'invoice' ? 'Sales Invoice Document' : type === 'orderConfirmation' ? 'Order Confirmation Document' : 'Packing Slip Document'}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
 
     res.setHeader('Content-Type', 'application/pdf')
     res.setHeader('Content-Disposition', `attachment; filename="${filename}.pdf"`)
@@ -167,12 +167,12 @@ class DocumentController extends BaseController {
     const msg = {
       to,
       from,
-      subject: `${type === 'invoice' ? 'Sales Invoice' : type === 'orderConfirmation' ? 'Order Confirmation Document' : 'Packing Slip Document'}  ${download.documentNumber}`,
-      text: `Please find attached the ${type === 'invoice' ? 'invoice' : type === 'orderConfirmation' ? 'order confirmation document' : 'packing slip document'} .`,
+      subject: `${type === 'invoice' ? 'Sales Invoice Document' : type === 'orderConfirmation' ? 'Order Confirmation Document' : 'Packing Slip Document'}  ${download.documentNumber}`,
+      text: `Please find attached the ${type === 'invoice' ? 'sales invoice document' : type === 'orderConfirmation' ? 'order confirmation document' : 'packing slip document'} .`,
       attachments: [
         {
           content: pdfBuffer.toString('base64'),
-          filename: `${type === 'invoice' ? 'Sales Invoice' : type === 'orderConfirmation' ? 'Order Confirmation Document' : 'Packing Slip Document'}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH.pdf`,
+          filename: `${type === 'invoice' ? 'Sales Invoice Document' : type === 'orderConfirmation' ? 'Order Confirmation Document' : 'Packing Slip Document'}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH.pdf`,
           type: 'application/pdf',
           disposition: 'attachment'
         }
