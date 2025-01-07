@@ -437,7 +437,6 @@ export const orderConfirmationTemplate = `
   .document-box {
     width: 48%;
     line-height: 24px;
-    font-size: 16px;
   }
 
   .document-table {
@@ -545,11 +544,11 @@ export const orderConfirmationTemplate = `
             <td>[orderNumber]</td>
           </tr>
           <tr>
-            <td>External Order number:</td>
+            <td>External Order Number:</td>
             <td>[externalOrderNumber]</td>
           </tr>
           <tr>
-            <td>External Project number:</td>
+            <td>External Project Number:</td>
             <td>[externalProjectNumber]</td>
           </tr>
           <tr>
@@ -730,9 +729,7 @@ export const packingSlipTemplate = `
   .document-box { 
     width: 48%;
     line-height: 24px;
-    font-size: 16px;
     text-wrap: pretty;
-    max-width: 300px;
     word-break: break-word;
   }
 
@@ -786,7 +783,7 @@ export const packingSlipTemplate = `
   .shipping {
     color: #000;
     text-decoration: none;
-    font-size: 14px;
+    font-size: 0.8em;
     text-wrap: pretty;
   }
 </style>
@@ -846,7 +843,7 @@ export const packingSlipTemplate = `
             <td>[documentDate]</td>
           </tr>
           <tr>
-            <td>Date of delivery:</td>
+            <td>Date of Delivery:</td>
             <td>[deliveryDate]</td>
           </tr>
           <tr>
@@ -854,11 +851,11 @@ export const packingSlipTemplate = `
             <td>[orderNumber]</td>
           </tr>
           <tr>
-            <td>External Order number:</td>
+            <td>External Order Number:</td>
             <td>[externalOrderNumber]</td>
           </tr>
           <tr>
-            <td>External Project number:</td>
+            <td>External Project Number:</td>
             <td>[externalProjectNumber]</td>
           </tr>
           <tr>
