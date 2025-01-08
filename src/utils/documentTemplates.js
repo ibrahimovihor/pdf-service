@@ -274,36 +274,28 @@ export const invoiceTemplate = `
         [documentItems]
       </tbody>
     </table>
-    <div class="">
+    <div class="totals flex-col align-items-end">
       <table class="totals-table">
         <tr>
-          <td class="text-left"><strong>Total Net</strong></td>
-          <td class="text-right"><strong>[totalNet]</strong></td>
+          <td><strong>Total Net:</strong></td>
+          <td class="align-right"><strong>[totalNet]</strong></td>
         </tr>
         <tr>
           <td><strong>Shipping Fee:</strong></td>
           <td class="align-right"><strong>[totalShipping]</strong></td>
         </tr>
         <tr>
-          <td class="text-left"><strong>plus VAT (19.00 %)</strong></td>
-          <td class="text-right"><strong>[vat]</strong></td>
+          <td><strong>VAT (19%):</strong></td>
+          <td class="align-right"><strong>[vat]</strong></td>
         </tr>
         <tr>
-          <td class="text-left"><strong>Invoice amount</strong></td>
-          <td class="text-right"><strong>[totalAmount]</strong></td>
+          <td><strong>Invoice amount:</strong></td>
+          <td class="align-right"><strong>[totalAmount]</strong></td>
         </tr>
-        <tr>
-          <td class="text-left"><strong>Payment amount</strong></td>
-          <td class="text-right"><strong>[totalAmount]</strong></td>
-        </tr>
-      </table>  
+      </table>
     </div>
   </div>
   <div class="footer">
-
-    <p class="text-right mb-5">
-      Page: 1
-    </p>
     <div class="border-t flex-row justify-between ">
       <div>
         <p>
