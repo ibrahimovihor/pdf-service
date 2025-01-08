@@ -277,22 +277,22 @@ export const invoiceTemplate = `
     <div class="">
       <table class="totals-table">
         <tr>
-          <td></td>
           <td class="text-left"><strong>Total Net</strong></td>
           <td class="text-right"><strong>[totalNet]</strong></td>
         </tr>
         <tr>
-          <td></td>
+          <td><strong>Shipping Fee:</strong></td>
+          <td class="align-right"><strong>[totalShipping]</strong></td>
+        </tr>
+        <tr>
           <td class="text-left"><strong>plus VAT (19.00 %)</strong></td>
           <td class="text-right"><strong>[vat]</strong></td>
         </tr>
         <tr>
-          <td></td>
           <td class="text-left"><strong>Invoice amount</strong></td>
           <td class="text-right"><strong>[totalAmount]</strong></td>
         </tr>
         <tr>
-          <td></td>
           <td class="text-left"><strong>Payment amount</strong></td>
           <td class="text-right"><strong>[totalAmount]</strong></td>
         </tr>
@@ -580,10 +580,10 @@ export const orderConfirmationTemplate = `
           <td><strong>Total Net:</strong></td>
           <td class="align-right"><strong>[totalNet]</strong></td>
         </tr>
-        <!-- <tr>
+        <tr>
           <td><strong>Shipping Fee:</strong></td>
           <td class="align-right"><strong>[totalShipping]</strong></td>
-        </tr> -->
+        </tr>
         <tr>
           <td><strong>VAT (19%):</strong></td>
           <td class="align-right"><strong>[vat]</strong></td>

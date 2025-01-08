@@ -11,7 +11,13 @@ const documentService = new DocumentService('Document')
 sgMail.setApiKey(String(process.env.SENDGRID_API_KEY))
 
 function replaceTemplateVariables (download, type) {
-  const replacedHtmlText = (type === 'invoice' ? invoiceTemplate : type === 'orderConfirmation' ? orderConfirmationTemplate : packingSlipTemplate).replace(/\[(\w+(?:\.\w+)?)\]/g, (placeholder) => {
+  const templateLookup = {
+    invoice: invoiceTemplate,
+    orderConfirmation: orderConfirmationTemplate,
+    packingSlip: packingSlipTemplate
+  }
+  const template = templateLookup[type] || invoiceTemplate
+  const replacedHtmlText = template.replace(/\[(\w+(?:\.\w+)?)\]/g, (placeholder) => {
     const {
       shippingAddress,
       billingAddress,
@@ -88,7 +94,7 @@ function replaceTemplateVariables (download, type) {
             <td>${item.articleName || ''}</td>
             <td>${(item.taxRate || 19).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</td>
             <td>${(item.price || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
-            <td>${(item.total * item.quantity || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
+            <td>${(item.total || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
           </tr>
         `).join('')
       case '[externalOrderNumber]':
