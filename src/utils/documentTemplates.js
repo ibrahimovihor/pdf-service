@@ -104,7 +104,12 @@ export const invoiceTemplate = `
   }
 
   .document-box {
-    width: 48%
+    width: 48%;
+    line-height: 24px;
+  }
+
+  .document-table {
+    width: 48%;
   }
 
   .document-details {
@@ -119,55 +124,29 @@ export const invoiceTemplate = `
     text-align: left
   }
 
+  .totals {
+    margin-top: 20px;
+    border-top: 2px solid #f8e4dc;
+    border-bottom: 2px solid #f8e4dc;
+  }
 
   .footer {
     margin-top: 50px;
     font-size: 12px;
-    color: #000000;
-    line-height: 20px;
-
-  }
-  
-  .border-t {
-    border-top: 2px solid #DDD;
+    color: #000
   }
 
   .footer a {
     text-decoration: none;
-    color: #000000;
+    color: #000
+  }
+
+  .align-right {
+    text-align: right;
   }
 
   .table-header-primary {
     background-color: #f8e4dc
-  }
-
-  .text-left {
-    text-align: left;
-  }
-
-  .text-right {
-    text-align: right;
-  }
-
-  .pr-30 {
-    margin-right: 30px;
-  }
-
-  .border-y {
-    border-top: 2px solid #f8e4dc;
-    border-bottom: 2px solid #f8e4dc;
-    padding-top: 5px;
-    padding-bottom: 5px;
-  }
-
-  .w-280{
-    width: 280px;
-    float: right;
-    margin-top: 5px;
-  }
-
-  .mb-5 {
-    margin-bottom: 5px;
   }
 </style>
 <div class=document-container>
@@ -713,12 +692,6 @@ export const packingSlipTemplate = `
   .document-details th {
     padding: 8px;
     text-align: left
-  }
-
-  .totals {
-    margin-top: 20px;
-    border-top: 2px solid #f8e4dc;
-    border-bottom: 2px solid #f8e4dc;
   }
 
   .footer {
