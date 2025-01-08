@@ -141,26 +141,6 @@ export const invoiceTemplate = `
     background-color: #f8e4dc
   }
 
-  .totals-table {
-    margin-top: 20px;
-    border-top: 2px solid #f8e4dc;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    width: 100%;
-  }
-
-  .totals-table td:first-child {
-    width: 50%;
-  }
-
-  .totals-table tr:nth-child(3) {
-    border-bottom: 2px solid #f8e4dc;
-  }
-
-  .totals-table tr:nth-child(3) td {
-    border-bottom: 2px solid #f8e4dc;
-  }
-
   .text-left {
     text-align: left;
   }
@@ -289,7 +269,7 @@ export const invoiceTemplate = `
           <td class="align-right"><strong>[vat]</strong></td>
         </tr>
         <tr>
-          <td><strong>Invoice amount:</strong></td>
+          <td><strong>Total Amount:</strong></td>
           <td class="align-right"><strong>[totalAmount]</strong></td>
         </tr>
       </table>
@@ -471,12 +451,6 @@ export const orderConfirmationTemplate = `
   .table-header-primary {
     background-color: #f8e4dc
   }
-
-  .totals-table{
-    margin-top: 5px;
-    margin-bottom: 5px;
-    
-  }
 </style>
 <div class="document-container">
   <div class="content">
@@ -581,7 +555,7 @@ export const orderConfirmationTemplate = `
           <td class="align-right"><strong>[vat]</strong></td>
         </tr>
         <tr>
-          <td><strong>Invoice amount:</strong></td>
+          <td><strong>Total Amount:</strong></td>
           <td class="align-right"><strong>[totalAmount]</strong></td>
         </tr>
       </table>
@@ -764,12 +738,6 @@ export const packingSlipTemplate = `
 
   .table-header-primary {
     background-color: #f8e4dc
-  }
-
-  .totals-table {
-    margin-top: 5px;
-    margin-bottom: 5px;
-    
   }
 
   .shipping {
