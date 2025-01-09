@@ -182,9 +182,9 @@ const documentDownload = {
     price: Joi.number().required(),
     total: Joi.number().required()
   })).required(),
-  externalOrderNumber: Joi.string().required(),
-  externalProjectNumber: Joi.string().required(),
-  shippingId: Joi.string().required().allow('')
+  externalOrderNumber: Joi.string().required().allow('').allow(null),
+  externalProjectNumber: Joi.string().required().allow('').allow(null),
+  shippingId: Joi.string().required().allow('').allow(null)
 }
 
 const pdfTypeEnum = {
