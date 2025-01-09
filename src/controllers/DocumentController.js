@@ -147,13 +147,13 @@ class DocumentController extends BaseController {
 
     const pdfBuffer = await generatePDF(replacedHtmlText)
 
-    const filenameLookup = {
+    const documentTypeLookup = {
       invoice: 'Sales Invoice Document',
       orderConfirmation: 'Order Confirmation Document',
       packingSlip: 'Packing Slip Document'
     }
 
-    const filename = `${filenameLookup[type] || filenameLookup.invoice}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
+    const filename = `${documentTypeLookup[type] || documentTypeLookup.invoice}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
 
     res.setHeader('Content-Type', 'application/pdf')
     res.setHeader('Content-Disposition', `attachment; filename="${filename}.pdf"`)
@@ -175,7 +175,7 @@ class DocumentController extends BaseController {
     const replacedHtmlText = replaceTemplateVariables(download, type)
     const pdfBuffer = await generatePDF(replacedHtmlText)
 
-    const filenameLookup = {
+    const documentTypeLookup = {
       invoice: {
         filename: 'Sales Invoice Document',
         subject: 'Sales Invoice Document',
@@ -193,9 +193,9 @@ class DocumentController extends BaseController {
       }
     }
 
-    const filename = `${filenameLookup[type]?.filename || filenameLookup.invoice.filename}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
-    const subject = `${filenameLookup[type]?.subject || filenameLookup.invoice.subject}  ${download.documentNumber}`
-    const text = `Please find attached the ${filenameLookup[type]?.text || filenameLookup.invoice.text}.`
+    const filename = `${documentTypeLookup[type]?.filename || documentTypeLookup.invoice.filename}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
+    const subject = `${documentTypeLookup[type]?.subject || documentTypeLookup.invoice.subject}  ${download.documentNumber}`
+    const text = `Please find attached the ${documentTypeLookup[type]?.text || documentTypeLookup.invoice.text}.`
 
     // Prepare email
     const msg = {
