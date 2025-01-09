@@ -202,11 +202,17 @@ const validateDocumentEmail = Joi.object({
   type: Joi.string().valid(...Object.values(pdfTypeEnum))
 })
 
+const validateDocumentDownload = Joi.object({
+  download: documentDownload,
+  type: Joi.string().valid(...Object.values(pdfTypeEnum))
+})
+
 export default {
   validateBody,
   validateGreetingCardPrint,
   validateGreetingCardDownload,
   validateInvoiceDownload,
   validateInvoiceEmail,
-  validateDocumentEmail
+  validateDocumentEmail,
+  validateDocumentDownload
 }

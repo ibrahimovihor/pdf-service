@@ -11,7 +11,7 @@ const documentRoutes = () => {
 
   documentRouter.route('/documents/download')
     .post(asyncHandler(checkAuth), celebrate({
-      [Segments.BODY]: validator.validateDocumentEmail
+      [Segments.BODY]: validator.validateDocumentDownload
     }), asyncHandler(DocumentController.downloadDocument))
     .all(methodNotAllowed)
 

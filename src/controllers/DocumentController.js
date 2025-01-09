@@ -147,7 +147,13 @@ class DocumentController extends BaseController {
 
     const pdfBuffer = await generatePDF(replacedHtmlText)
 
-    const filename = `${type === 'invoice' ? 'Sales Invoice Document' : type === 'orderConfirmation' ? 'Order Confirmation Document' : 'Packing Slip Document'}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
+    const documentTypeLookup = {
+      invoice: 'Sales Invoice Document',
+      orderConfirmation: 'Order Confirmation Document',
+      packingSlip: 'Packing Slip Document'
+    }
+
+    const filename = `${documentTypeLookup[type] || documentTypeLookup.invoice}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
 
     res.setHeader('Content-Type', 'application/pdf')
     res.setHeader('Content-Disposition', `attachment; filename="${filename}.pdf"`)
@@ -169,16 +175,38 @@ class DocumentController extends BaseController {
     const replacedHtmlText = replaceTemplateVariables(download, type)
     const pdfBuffer = await generatePDF(replacedHtmlText)
 
+    const documentTypeLookup = {
+      invoice: {
+        filename: 'Sales Invoice Document',
+        subject: 'Sales Invoice Document',
+        text: 'sales invoice document'
+      },
+      orderConfirmation: {
+        filename: 'Order Confirmation Document',
+        subject: 'Order Confirmation Document',
+        text: 'order confirmation document'
+      },
+      packingSlip: {
+        filename: 'Packing Slip Document',
+        subject: 'Packing Slip Document',
+        text: 'packing slip document'
+      }
+    }
+
+    const filename = `${documentTypeLookup[type]?.filename || documentTypeLookup.invoice.filename}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
+    const subject = `${documentTypeLookup[type]?.subject || documentTypeLookup.invoice.subject}  ${download.documentNumber}`
+    const text = `Please find attached the ${documentTypeLookup[type]?.text || documentTypeLookup.invoice.text}.`
+
     // Prepare email
     const msg = {
       to,
       from,
-      subject: `${type === 'invoice' ? 'Sales Invoice Document' : type === 'orderConfirmation' ? 'Order Confirmation Document' : 'Packing Slip Document'}  ${download.documentNumber}`,
-      text: `Please find attached the ${type === 'invoice' ? 'sales invoice document' : type === 'orderConfirmation' ? 'order confirmation document' : 'packing slip document'} .`,
+      subject,
+      text,
       attachments: [
         {
           content: pdfBuffer.toString('base64'),
-          filename: `${type === 'invoice' ? 'Sales Invoice Document' : type === 'orderConfirmation' ? 'Order Confirmation Document' : 'Packing Slip Document'}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH.pdf`,
+          filename,
           type: 'application/pdf',
           disposition: 'attachment'
         }
