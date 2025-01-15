@@ -2,29 +2,39 @@ import puppeteer from 'puppeteer'
 import dayjs from 'dayjs'
 import sgMail from '@sendgrid/mail'
 import BaseController from './BaseController'
-import InvoiceService from '../services/InvoiceService'
-import { invoiceTemplate } from '../utils/invoiceTemplate'
+import DocumentService from '../services/DocumentService'
+import { invoiceTemplate, orderConfirmationTemplate, packingSlipTemplate } from '../utils/documentTemplates'
 import * as statusCodes from '../constants/statusCodes'
 
-const invoiceService = new InvoiceService('Invoice')
+const documentService = new DocumentService('Document')
 
 sgMail.setApiKey(String(process.env.SENDGRID_API_KEY))
-function replaceTemplateVariables (download) {
-  const replacedHtmlText = invoiceTemplate.replace(/\[(\w+(?:\.\w+)?)\]/g, (placeholder) => {
+
+function replaceTemplateVariables (download, type) {
+  const templateLookup = {
+    invoice: invoiceTemplate,
+    orderConfirmation: orderConfirmationTemplate,
+    packingSlip: packingSlipTemplate
+  }
+  const template = templateLookup[type] || invoiceTemplate
+  const replacedHtmlText = template.replace(/\[(\w+(?:\.\w+)?)\]/g, (placeholder) => {
     const {
       shippingAddress,
       billingAddress,
-      invoiceNumber,
+      documentNumber,
       documentDate,
       dueDate,
       deliveryDate,
       orderNumber,
       costCenter,
-      invoiceItems,
+      documentItems,
       totalNet,
       totalAmount,
       totalShipping,
-      vat
+      vat,
+      externalOrderNumber,
+      externalProjectNumber,
+      shippingId
     } = download
 
     switch (placeholder) {
@@ -44,8 +54,8 @@ function replaceTemplateVariables (download) {
       case '[billingAddress.zip]':
       case '[billingAddress.country]':
         return billingAddress?.[placeholder.match(/\[billingAddress\.(\w+)\]/)[1]] || ''
-      case '[invoiceNumber]':
-        return invoiceNumber || ''
+      case '[documentNumber]':
+        return documentNumber || ''
       case '[documentDate]':
         return dayjs(documentDate).format('DD.MM.YYYY')
       case '[dueDate]':
@@ -64,10 +74,19 @@ function replaceTemplateVariables (download) {
         return (totalShipping || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
       case '[vat]':
         return (vat || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
-      case '[invoiceItems]':
-        if (!invoiceItems || invoiceItems.length === 0) return []
-
-        return invoiceItems.map((item, index) => `
+      case '[documentItems]':
+        if (!documentItems || documentItems.length === 0) return []
+        if (type === 'packingSlip') {
+          return documentItems.map((item, index) => `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${item.quantity || 1}</td>
+            <td>${item.articleNumber || ''}</td>
+            <td>${item.articleName || ''}</td>
+          </tr>
+          `).join('')
+        }
+        return documentItems.map((item, index) => `
           <tr>
             <td>${index + 1}</td>
             <td>${item.quantity || 1}</td>
@@ -75,9 +94,15 @@ function replaceTemplateVariables (download) {
             <td>${item.articleName || ''}</td>
             <td>${(item.taxRate || 19).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</td>
             <td>${(item.price || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
-            <td>${(item.total * item.quantity || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
+            <td>${(item.total || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}</td>
           </tr>
         `).join('')
+      case '[externalOrderNumber]':
+        return externalOrderNumber || ''
+      case '[externalProjectNumber]':
+        return externalProjectNumber || ''
+      case '[shippingId]':
+        return shippingId
       default:
         return placeholder
     }
@@ -109,19 +134,26 @@ async function generatePDF (htmlContent) {
   return pdfBuffer
 }
 
-class InvoiceController extends BaseController {
-  async downloadInvoice (req, res) {
+class DocumentController extends BaseController {
+  async downloadDocument (req, res) {
     const {
       body: {
-        download
+        download,
+        type
       }
     } = req
 
-    const replacedHtmlText = replaceTemplateVariables(download)
+    const replacedHtmlText = replaceTemplateVariables(download, type)
 
     const pdfBuffer = await generatePDF(replacedHtmlText)
 
-    const filename = `SalesInvoice-${download.invoiceNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
+    const documentTypeLookup = {
+      invoice: 'Sales Invoice Document',
+      orderConfirmation: 'Order Confirmation Document',
+      packingSlip: 'Packing Slip Document'
+    }
+
+    const filename = `${documentTypeLookup[type] || documentTypeLookup.invoice}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
 
     res.setHeader('Content-Type', 'application/pdf')
     res.setHeader('Content-Disposition', `attachment; filename="${filename}.pdf"`)
@@ -130,28 +162,51 @@ class InvoiceController extends BaseController {
     return res.send(pdfBuffer)
   }
 
-  async sendInvoiceEmail (req, res) {
+  async sendDocumentEmail (req, res) {
     const {
       body: {
         download,
-        email: { to, from }
+        email: { to, from },
+        type
       }
     } = req
 
     // Generate PDF (reusing existing logic)
-    const replacedHtmlText = replaceTemplateVariables(download)
+    const replacedHtmlText = replaceTemplateVariables(download, type)
     const pdfBuffer = await generatePDF(replacedHtmlText)
+
+    const documentTypeLookup = {
+      invoice: {
+        filename: 'Sales Invoice Document',
+        subject: 'Sales Invoice Document',
+        text: 'sales invoice document'
+      },
+      orderConfirmation: {
+        filename: 'Order Confirmation Document',
+        subject: 'Order Confirmation Document',
+        text: 'order confirmation document'
+      },
+      packingSlip: {
+        filename: 'Packing Slip Document',
+        subject: 'Packing Slip Document',
+        text: 'packing slip document'
+      }
+    }
+
+    const filename = `${documentTypeLookup[type]?.filename || documentTypeLookup.invoice.filename}-${download.documentNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH`
+    const subject = `${documentTypeLookup[type]?.subject || documentTypeLookup.invoice.subject}  ${download.documentNumber}`
+    const text = `Please find attached the ${documentTypeLookup[type]?.text || documentTypeLookup.invoice.text}.`
 
     // Prepare email
     const msg = {
       to,
       from,
-      subject: `Invoice ${download.invoiceNumber}`,
-      text: `Please find attached the invoice ${download.invoiceNumber}.`,
+      subject,
+      text,
       attachments: [
         {
           content: pdfBuffer.toString('base64'),
-          filename: `SalesInvoice-${download.invoiceNumber}-${dayjs(download.dueDate).format('DD-MM-YYYY')}-big little things GmbH.pdf`,
+          filename,
           type: 'application/pdf',
           disposition: 'attachment'
         }
@@ -165,10 +220,10 @@ class InvoiceController extends BaseController {
       statusCode: statusCodes.OK,
       success: true,
       greetingCard: {
-        message: 'Invoice email sent successfully'
+        message: 'Document email sent successfully'
       }
     })
   }
 }
 
-export default new InvoiceController(invoiceService)
+export default new DocumentController(documentService)

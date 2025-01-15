@@ -147,10 +147,72 @@ const validateInvoiceEmail = Joi.object({
   }).required()
 })
 
+const documentDownload = {
+  shippingAddress: Joi.object({
+    company: Joi.string().required().allow(''),
+    street: Joi.string().required(),
+    city: Joi.string().required(),
+    state: Joi.string().required().allow(''),
+    zip: Joi.string().required(),
+    country: Joi.string().required()
+  }).required(),
+  billingAddress: Joi.object({
+    company: Joi.string().required().allow(''),
+    street: Joi.string().required(),
+    city: Joi.string().required(),
+    state: Joi.string().required().allow(''),
+    zip: Joi.string().required(),
+    country: Joi.string().required()
+  }).required(),
+  documentNumber: Joi.number().required(),
+  documentDate: Joi.date().required(),
+  dueDate: Joi.date().required(),
+  deliveryDate: Joi.date().required(),
+  orderNumber: Joi.string().required(),
+  costCenter: Joi.string().allow('').allow(null),
+  totalNet: Joi.number().required(),
+  totalAmount: Joi.number().required(),
+  totalShipping: Joi.number().required(),
+  vat: Joi.number().required(),
+  documentItems: Joi.array().items(Joi.object({
+    articleName: Joi.string().required(),
+    articleNumber: Joi.string().required(),
+    taxRate: Joi.number().required(),
+    quantity: Joi.number().required(),
+    price: Joi.number().required(),
+    total: Joi.number().required()
+  })).required(),
+  externalOrderNumber: Joi.string().required().allow('').allow(null),
+  externalProjectNumber: Joi.string().required().allow('').allow(null),
+  shippingId: Joi.string().required().allow('').allow(null)
+}
+
+const pdfTypeEnum = {
+  Invoice: 'invoice',
+  PackingSlip: 'packingSlip',
+  OrderConfirmation: 'orderConfirmation'
+}
+
+const validateDocumentEmail = Joi.object({
+  download: documentDownload,
+  email: Joi.object({
+    to: Joi.string().email().required(),
+    from: Joi.string().email().required()
+  }).required(),
+  type: Joi.string().valid(...Object.values(pdfTypeEnum))
+})
+
+const validateDocumentDownload = Joi.object({
+  download: documentDownload,
+  type: Joi.string().valid(...Object.values(pdfTypeEnum))
+})
+
 export default {
   validateBody,
   validateGreetingCardPrint,
   validateGreetingCardDownload,
   validateInvoiceDownload,
-  validateInvoiceEmail
+  validateInvoiceEmail,
+  validateDocumentEmail,
+  validateDocumentDownload
 }
