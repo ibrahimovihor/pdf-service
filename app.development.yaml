@@ -1,5 +1,5 @@
 service: development
-runtime: nodejs18
+runtime: nodejs22
 instance_class: F4
 automatic_scaling:
   target_cpu_utilization: 0.95
