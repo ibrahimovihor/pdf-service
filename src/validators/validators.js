@@ -15,6 +15,7 @@ const validateGreetingCardPrint = Joi.object({
     imageUrl: Joi.string().uri(),
     placeholders: Joi.object({
       salutation: Joi.string().allow('').allow(null),
+      title: Joi.string().allow('').allow(null),
       firstname: Joi.string().allow('').allow(null),
       lastname: Joi.string().allow('').allow(null)
     }),
@@ -71,6 +72,7 @@ const validateGreetingCardDownload = Joi.object({
     }),
     placeholders: Joi.object({
       salutation: Joi.string().allow('').required(),
+      title: Joi.string().allow('').required(),
       firstname: Joi.string().allow('').required(),
       lastname: Joi.string().allow('').required()
     }),
