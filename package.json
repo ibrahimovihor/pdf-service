@@ -1,5 +1,5 @@
 {
-  "name": "endeavour-greeting-card-service",
+  "name": "greeting-card-service",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -11,7 +11,7 @@
     "create-env": "printenv > .env",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Ryan Wire",
+  "author": "Ibrahimov",
   "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.22.15",

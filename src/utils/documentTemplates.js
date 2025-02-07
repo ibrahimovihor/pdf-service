@@ -148,10 +148,6 @@ export const invoiceTemplate = `
   .table-header-primary {
     background-color: #f8e4dc
   }
-
-  .small {
-    font-size: 0.8em
-  }
 </style>
 <div class=document-container>
   <div class=content>
@@ -212,7 +208,7 @@ export const invoiceTemplate = `
           </tr>
           <tr>
             <td>Order Number:</td>
-            <td class="small">[orderNumber]</td>
+            <td>[orderNumber]</td>
           </tr>
           <tr>
             <td>Cost Center:</td>
@@ -434,10 +430,6 @@ export const orderConfirmationTemplate = `
   .table-header-primary {
     background-color: #f8e4dc
   }
-
-  .small {
-    font-size: 0.8em
-  }
 </style>
 <div class="document-container">
   <div class="content">
@@ -494,15 +486,15 @@ export const orderConfirmationTemplate = `
           </tr>
           <tr>
             <td>Order Number:</td>
-            <td class="small">[orderNumber]</td>
+            <td>[orderNumber]</td>
           </tr>
           <tr>
             <td>External Order Number:</td>
-            <td class="small">[externalOrderNumber]</td>
+            <td>[externalOrderNumber]</td>
           </tr>
           <tr>
             <td>External Project Number:</td>
-            <td class="small">[externalProjectNumber]</td>
+            <td>[externalProjectNumber]</td>
           </tr>
           <tr>
             <td>Cost Center:</td>
@@ -727,10 +719,6 @@ export const packingSlipTemplate = `
     font-size: 0.8em;
     text-wrap: pretty;
   }
-
-  .small {
-    font-size: 0.8em
-  }
 </style>
 <div class="document-container">
   <div class="content">
@@ -793,15 +781,15 @@ export const packingSlipTemplate = `
           </tr>
           <tr>
             <td>Order Number:</td>
-            <td class="small">[orderNumber]</td>
+            <td>[orderNumber]</td>
           </tr>
           <tr>
             <td>External Order Number:</td>
-            <td class="small">[externalOrderNumber]</td>
+            <td>[externalOrderNumber]</td>
           </tr>
           <tr>
             <td>External Project Number:</td>
-            <td class="small">[externalProjectNumber]</td>
+            <td>[externalProjectNumber]</td>
           </tr>
           <tr>
             <td>Cost Center:</td>
